@@ -1,0 +1,90 @@
+* {
+  scrollbar-width: thin;
+}
+
+body {
+  min-width: 1000px;
+  margin: 1%;
+  user-select: none; /* Disables text selection */
+  -webkit-user-select: none; /* For WebKit browsers (Safari, Chrome) */
+  -moz-user-select: none; /* For Firefox */
+  -ms-user-select: none;
+}
+
+.btn.btn-outline-success {
+  padding: 10px 30px;
+}
+
+.btn.btn-outline-danger {
+  padding: 10px 30px;
+  float: right;
+}
+
+.btn.btn-outline-secondary {
+  padding: 10px 30px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* General Layout */
+.tickets-board {
+  margin-top: 0.8%;
+  width: 30%;
+  /* margin: 1% 4%; */
+  padding: 20px;
+  /* border: 1px solid #ddd; */
+  /* border-radius: 8px; */
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  /* background-color: #f9f9f9; */
+  /* font-family: "Roboto", sans-serif; */
+  /* color: #333; */
+}
+
+/* Header */
+/* .tickets-board h2 {
+  font-weight: bold;
+  margin-bottom: 20px;
+} */
+
+/* Ticket Table */
+.ticket-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.ticket-table thead tr {
+  text-align: left;
+}
+
+.ticket-table th,
+.ticket-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.ticket-table tbody tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+/* Summary Table */
+.summary-table {
+  width: 100%;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.summary-table td {
+  padding: 10px;
+  font-weight: bold;
+}
+
+.summary-table td:nth-child(2) {
+  text-align: right;
+}
