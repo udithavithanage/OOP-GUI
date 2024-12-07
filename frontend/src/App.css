@@ -4,7 +4,8 @@
 
 body {
   min-width: 1000px;
-  margin: 1%;
+  background-color: rgba(128, 128, 128, 0.088);
+  margin-right: 1%;
   user-select: none; /* Disables text selection */
   -webkit-user-select: none; /* For WebKit browsers (Safari, Chrome) */
   -moz-user-select: none; /* For Firefox */
@@ -26,37 +27,20 @@ body {
 
 .buttons {
   display: flex;
-  gap: 10px; /* Space between buttons */
+  gap: 10px;
   justify-content: center;
   align-items: center;
-  padding: 20px;
 }
 
-/* General Layout */
 .tickets-board {
-  margin-top: 0.8%;
+  margin-top: 2.3%;
   width: 30%;
-  /* margin: 1% 4%; */
-  padding: 20px;
-  /* border: 1px solid #ddd; */
-  /* border-radius: 8px; */
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
-  /* background-color: #f9f9f9; */
-  /* font-family: "Roboto", sans-serif; */
-  /* color: #333; */
+  padding: 0px;
 }
 
-/* Header */
-/* .tickets-board h2 {
-  font-weight: bold;
-  margin-bottom: 20px;
-} */
-
-/* Ticket Table */
 .ticket-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 .ticket-table thead tr {
@@ -73,7 +57,6 @@ body {
   background-color: #f1f1f1;
 }
 
-/* Summary Table */
 .summary-table {
   width: 100%;
   font-size: 16px;
@@ -87,4 +70,49 @@ body {
 
 .summary-table td:nth-child(2) {
   text-align: right;
+}
+
+.alert-box {
+  background-color: #000000e8;
+  color: red;
+  border-left: 5px solid red;
+  border-radius: 8px;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Arial", sans-serif;
+  width: 32%;
+  max-width: 600px;
+  margin: 20px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.5s ease-out;
+  position: fixed;
+  transition: opacity 0.4s ease;
+  bottom: 1%;
+  left: 1%;
+  z-index: 900;
+}
+
+.close-btn {
+  background: none;
+  color: white;
+  border: none;
+  font-size: x-large;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.alert-box.fade-out {
+  opacity: 0;
+  transform: translateY(-20px);
 }

@@ -1,12 +1,28 @@
 const { parentPort, workerData } = require("worker_threads");
-// const TicketPool = require('./TicketPool');
 
-// Shared TicketPool instance
-// const ticketPool = new TicketPool(workerData.maxCapacity);
+class Customers {
+  constructor(customerId, customerRetrieveRate) {
+    this.customerId = customerId;
+    this.customerRetrieveRate = customerRetrieveRate;
+  }
 
-const customerId = workerData.customerId;
-parentPort.postMessage({ action: "purchaseTicket", customerId: customerId });
-setInterval(() => {
-  // const ticket = await ticketPool.removeTicket(customerId);
-  parentPort.postMessage({ action: "purchaseTicket", customerId: customerId });
-}, workerData.customerRetrieveRate * 1000); // Every 1.5 seconds
+  postMessageToParent() {
+    parentPort.postMessage({
+      action: "purchaseTicket",
+      customerId: this.customerId,
+    });
+    setInterval(() => {
+      parentPort.postMessage({
+        action: "purchaseTicket",
+        customerId: this.customerId,
+      });
+    }, this.customerRetrieveRate * 1000);
+  }
+}
+
+const Customer = new Customers(
+  workerData.customerId,
+  workerData.customerRetrieveRate
+);
+
+Customer.postMessageToParent();

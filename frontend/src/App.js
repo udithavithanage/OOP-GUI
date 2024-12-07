@@ -44,6 +44,14 @@ function App() {
         ...prev,
         { time: new Date().toLocaleTimeString(), sales: totalSales },
       ]);
+
+      if (totalSales == vendors[0]) {
+        //Sold all tickects auto stop system (Terminate all threads)
+        fetch("http://localhost:3000/stop")
+          .then((res) => res.text())
+          .then((text) => console.log(text))
+          .catch((error) => console.log(error));
+      }
     };
 
     socket.onerror = (error) => {
@@ -84,6 +92,7 @@ function App() {
 
   const resetgraph = () => {
     setTimeData([]);
+    setData([0, 0, 0, 0, {}, {}]);
   };
 
   return (
@@ -92,49 +101,60 @@ function App() {
 
       <div className="tickets-board">
         <center>
-          <h2>Tickets Board</h2>
+          <h2>Ticket Board</h2>
         </center>
-
-        <table className="ticket-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th style={{ textAlign: "center" }}>Add Ticket Count</th>
-              <th style={{ textAlign: "center" }}>Sale Ticket Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(data[4]).map((key) => (
-              <tr key={key}>
-                <td>Vendor {key}</td>
-                <td style={{ textAlign: "center" }}>{data[4][key].add}</td>
-                <td style={{ textAlign: "center" }}>{data[4][key].sale}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <br />
-        <table className="ticket-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th style={{ textAlign: "center" }}>Sale Ticket Count</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(data[5]).map((key) => (
-              <tr key={key}>
-                <td>Customer {key}</td>
-                <td style={{ textAlign: "center" }}>{data[5][key].sale}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {Object.keys(data[4]).length ? (
+          <div>
+            <table className="ticket-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th style={{ textAlign: "center", width: "40%" }}>
+                    Number of tickets generated
+                  </th>
+                  <th style={{ textAlign: "center", width: "30%" }}>
+                    Number of Tickets Sold
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.keys(data[4]).map((key) => (
+                  <tr key={key}>
+                    <td>Vendor {key}</td>
+                    <td style={{ textAlign: "center" }}>{data[4][key].add}</td>
+                    <td style={{ textAlign: "center" }}>{data[4][key].sale}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <br />
+            <table className="ticket-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th style={{ textAlign: "center" }}>
+                    Number of tickets purchased
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.keys(data[5]).map((key) => (
+                  <tr key={key}>
+                    <td>Customer {key}</td>
+                    <td style={{ textAlign: "center" }}>{data[5][key].sale}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
 
       <div style={{ marginTop: "2.5%", marginLeft: "1.5%", width: "45%" }}>
         <center>
-          <h2>Sale Ticket Count Over Time</h2>
+          <h2>Sales Ticket Count Over Time</h2>
         </center>
         <Line data={chartData} />
 
@@ -163,7 +183,7 @@ function App() {
               letterSpacing: "3px",
             }}
           >
-            Sold all tickets
+            Tickets Sold Out
           </p>
         ) : (
           <p></p>
@@ -175,19 +195,19 @@ function App() {
               <td> : {data[0]}</td>
             </tr>
             <tr>
-              <td>Maximum Ticket Capacity</td>
+              <td>Maximum Ticket Capacity in Ticket Pool</td>
               <td> : {data[3]}</td>
             </tr>
             <tr>
-              <td>Total Add Ticket Count</td>
+              <td>Total Number of Tickets Added to System</td>
               <td> : {data[1]}</td>
             </tr>
             <tr>
-              <td>Total Sale Ticket Count</td>
+              <td>Total Number of Tickets Sold</td>
               <td> : {data[1] - data[2]}</td>
             </tr>
             <tr>
-              <td>Remaining Ticket Count</td>
+              <td>Remaining Ticket Count in Ticket Pool </td>
               <td> : {data[2]}</td>
             </tr>
           </tbody>

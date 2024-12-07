@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import Alert from "./Alert.js";
+
+var msg;
 
 function ConfigForm({ resetgraph }) {
   const [formData, setFormData] = useState({
@@ -9,6 +12,10 @@ function ConfigForm({ resetgraph }) {
     numberOfVendors: "",
     numberOfCustomers: "",
   });
+
+  const refs = useRef([]);
+
+  const [alert, setAlert] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -27,22 +34,56 @@ function ConfigForm({ resetgraph }) {
       numberOfVendors: "",
       numberOfCustomers: "",
     });
+
+    fetch("http://localhost:3000/stop")
+      .then((res) => res.text())
+      .then((text) => console.log(text))
+      .catch((error) => console.log(error));
+
+    resetgraph();
   };
 
   const handleStart = () => {
-    fetch(
-      `http://localhost:3000?totalTicketCount=${formData.totalTicketCount}&ticketReleaseRate=${formData.ticketReleaseRate}&customerRetrieveRate=${formData.customerRetrieveRate}&maxTicketCapacity=${formData.maxTicketCapacity}&numberOfVendors=${formData.numberOfVendors}&numberOfCustomers=${formData.numberOfCustomers}`
-    )
-      .then((res) => res.text())
-      .then((text) => {
-        if (text == "System already running...") {
-          console.log(text);
-        } else {
-          resetgraph();
-          console.log(text);
-        }
-      })
-      .catch((error) => console.log(error));
+    if (
+      formData.totalTicketCount > 1 &&
+      formData.ticketReleaseRate > 1 &&
+      formData.customerRetrieveRate > 1 &&
+      formData.maxTicketCapacity > 1 &&
+      formData.numberOfVendors > 1 &&
+      formData.numberOfCustomers > 1
+    ) {
+      fetch(
+        `http://localhost:3000?totalTicketCount=${formData.totalTicketCount}&ticketReleaseRate=${formData.ticketReleaseRate}&customerRetrieveRate=${formData.customerRetrieveRate}&maxTicketCapacity=${formData.maxTicketCapacity}&numberOfVendors=${formData.numberOfVendors}&numberOfCustomers=${formData.numberOfCustomers}`
+      )
+        .then((res) => res.text())
+        .then((text) => {
+          if (text == "System already running...") {
+            console.log(text);
+          } else {
+            resetgraph();
+            console.log(text);
+          }
+        })
+        .catch((error) => console.log(error));
+    } else {
+      formData.totalTicketCount < 1
+        ? (msg = "Total Ticket Count must be greater than 1.")
+        : formData.ticketReleaseRate < 1
+        ? (msg = "Ticket Release Rate must be greater than 1.")
+        : formData.customerRetrieveRate < 1
+        ? (msg = "Customer Retrieve Rate must be greater than 1.")
+        : formData.maxTicketCapacity < 1
+        ? (msg = "Maximum Ticket Capacity must be greater than 1.")
+        : formData.numberOfVendors < 1
+        ? (msg = "Number of Vendors must be greater than 1.")
+        : formData.numberOfCustomers < 1
+        ? (msg = "Number of Customers must be greater than 1.")
+        : (msg = "");
+      setAlert(true);
+      setTimeout(() => {
+        setAlert(false);
+      }, 3000);
+    }
   };
 
   const handleStop = () => {
@@ -55,7 +96,7 @@ function ConfigForm({ resetgraph }) {
   return (
     <div style={{ width: "25%", margin: "2%" }}>
       <center>
-        <h2>Configuration Form</h2>
+        <h2 style={{ marginBottom: "10%" }}>Configuration Form</h2>
       </center>
       <div className="form-floating mb-3">
         <input
@@ -66,6 +107,12 @@ function ConfigForm({ resetgraph }) {
           onChange={handleInputChange}
           placeholder="Total Ticket Count"
           min={1}
+          ref={(el) => (refs.current[0] = el)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              refs.current[1].focus();
+            }
+          }}
         />
         <label htmlFor="floatingInput">Total Ticket Count</label>
       </div>
@@ -79,6 +126,12 @@ function ConfigForm({ resetgraph }) {
           onChange={handleInputChange}
           placeholder="Ticket Release Rate (Seconds)"
           min={1}
+          ref={(el) => (refs.current[1] = el)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              refs.current[2].focus();
+            }
+          }}
         />
         <label htmlFor="floatingPassword">Ticket Release Rate (Seconds)</label>
       </div>
@@ -92,6 +145,12 @@ function ConfigForm({ resetgraph }) {
           onChange={handleInputChange}
           placeholder="Customer Retrieve Rate (Seconds)"
           min={1}
+          ref={(el) => (refs.current[2] = el)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              refs.current[3].focus();
+            }
+          }}
         />
         <label htmlFor="floatingPassword">
           Customer Retrieve Rate (Seconds)
@@ -107,10 +166,14 @@ function ConfigForm({ resetgraph }) {
           onChange={handleInputChange}
           placeholder="Maximum Ticket Capacity"
           min={1}
+          ref={(el) => (refs.current[3] = el)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              refs.current[4].focus();
+            }
+          }}
         />
-        <label htmlFor="floatingPassword">
-          Maximum Ticket Capacity in Ticket Pool
-        </label>
+        <label htmlFor="floatingPassword">Maximum Ticket Capacity</label>
       </div>
 
       <div className="form-floating mb-3">
@@ -122,6 +185,12 @@ function ConfigForm({ resetgraph }) {
           onChange={handleInputChange}
           placeholder="Number of Vendors"
           min={1}
+          ref={(el) => (refs.current[4] = el)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              refs.current[5].focus();
+            }
+          }}
         />
         <label htmlFor="floatingPassword">Number of Vendors</label>
       </div>
@@ -135,10 +204,15 @@ function ConfigForm({ resetgraph }) {
           onChange={handleInputChange}
           placeholder="Number of Customers"
           min={1}
+          ref={(el) => (refs.current[5] = el)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleStart();
+            }
+          }}
         />
         <label htmlFor="floatingPassword">Number of Customers</label>
       </div>
-
       <div className="buttons">
         <button
           type="button"
@@ -162,6 +236,7 @@ function ConfigForm({ resetgraph }) {
           Stop
         </button>
       </div>
+      {alert && <Alert msg={msg} />}
     </div>
   );
 }

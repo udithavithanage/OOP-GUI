@@ -9,32 +9,22 @@ const app = express();
 const PORT = 3000;
 app.use(cors());
 
-// Create HTTP server
 const server = http.createServer(app);
 
-// Create WebSocket server using the HTTP server
 const wss = new WebSocket.Server({ server });
 
-// Handle WebSocket connections
 wss.on("connection", (ws) => {
   console.log("New client connected");
 
-  // Send a welcome message to the client
-  // ws.send('Welcome to the WebSocket server!');
-
-  // Handle incoming messages from the client
   ws.on("message", (message) => {
     console.log(`Received: ${message}`);
-    //   ws.send(`Echo: ${message}`); // Echo the message back
   });
 
-  // Handle client disconnect
   ws.on("close", () => {
     console.log("Client disconnected");
   });
 });
 
-// Start the server
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
@@ -46,8 +36,6 @@ const upadateClients = (vendors) => {
     }
   });
 };
-
-// module.exports = {upadateClients};
 
 var start = false;
 
@@ -70,7 +58,6 @@ app.get("/", middleware, (req, res) => {
   const customerRetrieveRate = req.query.customerRetrieveRate;
   const totalTicketCount = req.query.totalTicketCount;
 
-  // Shared TicketPool instance
   const ticketPool = new TicketPool(
     maxCapacity,
     numberOfVendors,
@@ -88,9 +75,7 @@ app.get("/", middleware, (req, res) => {
 
     vendorWorker.on("message", async (message) => {
       if (message.action === "addTickets") {
-        // const count = Math.ceil(Math.random() * 5); // Add 1–5 tickets
         await ticketPool.addTickets(message.vendorId);
-        // console.log(`Vendor-${message.vendorId} added ${count} tickets.`);
       }
     });
 
@@ -115,11 +100,6 @@ app.get("/", middleware, (req, res) => {
     customerWorker.on("message", async (message) => {
       if (message.action === "purchaseTicket") {
         const ticket = await ticketPool.removeTicket(message.customerId);
-        // if (ticket) {
-        //     console.log(`Customer-${message.customerId} purchased ${ticket}`);
-        // } else {
-        //     console.log(`Customer-${message.customerId} could not purchase. No tickets available.`);
-        // }
       }
     });
 

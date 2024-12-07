@@ -1,14 +1,18 @@
 const { parentPort, workerData } = require("worker_threads");
-// const TicketPool = require('./TicketPool');
-// const { count } = require('console');
 
-// Shared TicketPool instance
-// const ticketPool = new TicketPool(workerData.maxCapacity);
+class Vendors {
+  constructor(vendorId, releaseRate) {
+    this.vendorId = vendorId;
+    this.releaseRate = releaseRate;
+  }
 
-const vendorId = workerData.vendorId;
-parentPort.postMessage({ action: "addTickets", vendorId: vendorId });
-setInterval(() => {
-  // const count = Math.ceil(Math.random() * 5); // Add 1–5 tickets
-  // await ticketPool.addTickets(vendorId, count);
-  parentPort.postMessage({ action: "addTickets", vendorId: vendorId });
-}, workerData.releaseRate * 1000); // Every 2 seconds
+  postMessageToParent() {
+    parentPort.postMessage({ action: "addTickets", vendorId: this.vendorId });
+    setInterval(() => {
+      parentPort.postMessage({ action: "addTickets", vendorId: this.vendorId });
+    }, this.releaseRate * 1000);
+  }
+}
+
+const vendor = new Vendors(workerData.vendorId, workerData.releaseRate);
+vendor.postMessageToParent();

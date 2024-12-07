@@ -1,5 +1,4 @@
 const { Mutex } = require("async-mutex");
-// const {upadateClients} = require('./main.js');
 
 class TicketPool {
   constructor(
@@ -32,12 +31,6 @@ class TicketPool {
         this.pool.length < this.maxCapacity &&
         this.addCount < this.totalTicketCount
       ) {
-        // for (let i = 0; i < count; i++) {
-        //     const ticket = `Vendor-${vendorId}-Ticket-${Date.now()}-${i}`;
-        //     this.pool.push(ticket);
-        // }
-
-        // const ticket = `Vendor-${vendorId}-Ticket-${Date.now()}`;
         const ticket = {
           vendorId: vendorId,
           ticket: Date.now(),
@@ -53,7 +46,6 @@ class TicketPool {
           this.vendors,
           this.customers,
         ]);
-        // console.log(`Vendor-${vendorId} added ticket.`);
       }
     });
   }
@@ -72,18 +64,12 @@ class TicketPool {
           this.vendors,
           this.customers,
         ]);
-        // console.log(`Customer-${customerId} purchased ${ticket}.`);
         return ticket;
       } else {
-        // console.log(`Customer-${customerId} could not purchase. No tickets available.`);
         return null;
       }
     });
   }
-
-  // getTickets() {
-  //     return this.pool;
-  // }
 }
 
 module.exports = TicketPool;
