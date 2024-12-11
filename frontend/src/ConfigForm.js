@@ -45,12 +45,12 @@ function ConfigForm({ resetgraph }) {
 
   const handleStart = () => {
     if (
-      formData.totalTicketCount > 1 &&
-      formData.ticketReleaseRate > 1 &&
-      formData.customerRetrieveRate > 1 &&
-      formData.maxTicketCapacity > 1 &&
-      formData.numberOfVendors > 1 &&
-      formData.numberOfCustomers > 1
+      formData.totalTicketCount > 0 &&
+      formData.ticketReleaseRate > 0 &&
+      formData.customerRetrieveRate > 0 &&
+      formData.maxTicketCapacity > 0 &&
+      formData.numberOfVendors > 0 &&
+      formData.numberOfCustomers > 0
     ) {
       fetch(
         `http://localhost:3000?totalTicketCount=${formData.totalTicketCount}&ticketReleaseRate=${formData.ticketReleaseRate}&customerRetrieveRate=${formData.customerRetrieveRate}&maxTicketCapacity=${formData.maxTicketCapacity}&numberOfVendors=${formData.numberOfVendors}&numberOfCustomers=${formData.numberOfCustomers}`
